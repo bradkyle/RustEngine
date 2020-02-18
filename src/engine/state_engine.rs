@@ -1,10 +1,23 @@
+#![feature(box_patterns)]
 
+extern crate rkdb;
+
+use rkdb::{
+    api,
+    kbindings::*
+};
 
 struct StateEngine {
-
+    handle: api::Handle,
 }
 
 impl StateEngine {
+
+    fn new(&self) -> StateEngine {
+
+    }
+
+    // Handle State udpates
 
     fn process_order_udpate(&self, order Order) {
 
@@ -34,7 +47,20 @@ impl StateEngine {
 
     }
 
+    // Serve state in grpc format
+
+    // Convert state into observations
+
     fn run(&self) {
 
     }
+}
+
+
+struct StateEngineClient {
+
+}
+
+impl StateEngineCLient {
+
 }
