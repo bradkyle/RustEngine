@@ -62,7 +62,7 @@ impl<T> Core for T where T: Engine {
     }
 }
 
-
+// Composition over inheritance
 struct BaseEngine {
     // Static config
     exchange: u64,
@@ -140,7 +140,7 @@ impl BaseEngine {
             (self.margin.equity - reserved),
             self.orderbook.best_bid
         );
-        let available_short = cmp::max(((short_equity * self.get_trading_leverage()) - notional_long), 0);
+        let available_short = cmp::max(((long_equity * self.get_trading_leverage()).round() - notional_long), 0);
         available_short;
     }
 
@@ -153,29 +153,23 @@ impl BaseEngine {
             0
         };
 
+        // Calculate the notional short as the
         let notional_short = self.position.get_notional_long();
         let short_equity = self.convert_to_contracts(
             (self.margin.equity - reserved),
-            self.orderbook.best_bid
+            self.orderbook.best_ask
         );
-        let available_short = cmp::max(((short_equity * self.get_trading_leverage()) - notional_short), 0);
+        let available_short = cmp::max(((short_equity * self.get_trading_leverage()).round() - notional_short), 0);
         available_short;
-
     }
 
     fn get_trading_value_cnt(&self) -> i32{
         // Returns the total available trading value in contracts for the current
         // account.
-    };
-
-    fn get_funding_rate(&self) -> f32{
-
-    };
-
-    fn get_account_series(&self) -> Array1<f64>{
-
-    };
-
+        let equity_as_cnt = self.convert_to_contracts(self.margin.equity, self.position.mark_price);
+        let trading_value_cnt = cmp::max((equity_as_cnt * self.get_trading_leverage()), 0);
+        trading_value_cnt;
+    }
 
 }
 
