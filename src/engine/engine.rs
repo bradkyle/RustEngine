@@ -19,7 +19,9 @@ pub enum ActionSpaceType {
 
 }
 
-trait Acts {
+// Implements agent functionality
+// for the engine, inference etc.
+trait Core {
     fn exec_action(&self, obs: Array1<f64>);
     fn get_long_position(&self) -> i32;
     fn get_short_position(&self) -> i32;
@@ -30,18 +32,30 @@ trait Acts {
     fn get_trading_value_cnt(&self) -> i32;
     fn get_funding_rate(&self) -> f32;
     fn get_account_se(&self) -> Array1<f64>;
+    fn process_order_update(&self);
+    fn process_position_update(&self);
+    fn process_instrument_update(&self);
+    fn run(&self);
 }
 
-trait Client {
-
+trait RestClient {
+    fn amend_bulk_orders(&self);
+    fn place_bulk_orders(&self);
+    fn get_open_limit_orders(&self);
+    fn get_open_stop_orders(&self);
 }
+
 
 trait Engine {
     fn get_action(&self);
     fn gen_orders_from_action(&self);
 }
 
-impl<T> Acts for T where T: Engine {
+
+
+// Implements Action and ingress functionality
+// for
+impl<T> Core for T where T: Engine {
     fn exec_action(&self, obs: Array1<f64>){
        // TODO
        println!("The observation is {}", obs)
@@ -73,8 +87,8 @@ pub struct EngineConfig {
     latent_execution_fraction: f32,
 
     action_space_type: ActionSpaceType,
-
 }
+
 
 
 pub struct DiscreteEngne {
