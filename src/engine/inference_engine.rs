@@ -113,7 +113,7 @@ impl BaseEngine {
         trading_value_cnt;
     }
 
-    // TODO split into smaller testable functions
+    // TODO split into smaller testable
     fn get_stops_from_position(&self) -> (Array<Order>, Array<Order>) {
         // Generates a set of stop orders based upon the current position and the
         // resultant liquidation price, given the stop fraction.
@@ -154,6 +154,16 @@ impl BaseEngine {
                     }
                 }
             }
+
+            // TODO dry
+            if (count(long_stops) == 1) {
+
+            } else if (count(short_stops) > 1){
+
+            } else (
+
+
+            )
 
 
 
