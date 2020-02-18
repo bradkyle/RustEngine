@@ -28,6 +28,8 @@ struct BaseEngine {
     latent_execution_fraction: f32,
 
     action_space_type: ActionSpaceType,
+    state_engine_client: StateEngineClient,
+    agent_inference_client: AgentInferenceClient
 
 }
 

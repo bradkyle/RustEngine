@@ -1,6 +1,8 @@
 #![feature(box_patterns)]
 
 extern crate rkdb;
+use std::error::Error;
+use std::fmt;
 
 use rkdb::{
     api,
