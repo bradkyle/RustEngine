@@ -115,6 +115,68 @@ impl InferenceEngine {
         trading_value_cnt;
     }
 
+    fn check_stop(&self, stop: Order, stop_price: f64) -> bool {
+        // Checks if the current stop is not correctly set i.e. another
+        // stop order needs to be placed.
+        if (long_stop.stop_px != stop_price
+            || long_stop.order_qty != -self.position.current_qty) {
+            true;
+        }
+    }
+
+    // Appends orders to given new_orders/amend_orders arrays
+    // depending on the side given to the function.
+    fn gen_stops_for_side() -> (Array<Order>, Array<Order>) {
+            // Remove any short stop orders
+            if (count(short_stops) > 0){
+                for order in short_stops.into_iter() {
+                    let amend_order = Order{
+                        order_id: order.order_id,
+                        order_qty: 0,
+                        ..order
+                    }
+                    amend_orders.push(amend_order)
+                }
+            }
+
+            if (count(long_stops) == 1) {
+
+                // get the first/only long stop
+                let long_stop = long_stops[0];
+
+                // if the stop loss price is not equal to the stop price
+                // defined above or the stop loss quantity is not equal
+                // to the inverse of the position size amend stop loss order.
+                if check_stop(long_stop, stop_price) {
+                    let amend_order = Order{
+                        stop_px: stop_price,
+                        order_qty: -self.position.current_qty,
+                        ..order
+                    }
+                    amend_orders.push(amend_order);
+                }
+
+            } else if (count(short_stops) > 1){
+
+                // group by stop price, if there is one order at the
+                // current stop price then remove others and amend this
+                // order else remove all others and place new stop order
+
+            } else {
+                // If there are no stop orders in existence then generate
+                // a new stop order opposing the current position.
+                let order = Order{
+                    ord_type:OrdType::Stop,
+                    order_qty: -self.position.current_qty,
+                    stop_px: stop_price,
+                    side:
+                    symbol: self.symbol
+                }
+                new_orders.push(new_order);
+            }
+
+    }
+
     // TODO split into smaller testable
     fn get_stops_from_position(&self) -> (Array<Order>, Array<Order>) {
         // Generates a set of stop orders based upon the current position and the
@@ -122,9 +184,9 @@ impl InferenceEngine {
         let mut new_orders = Vec::new();
         let mut amend_orders = Vec::new();
 
-        let risk_leway = self.position.liquidation_price - self.position.avg_entry_price;
-        let stop_leway = risk_leway * self.stop_fraction;
-        let stop_price = (self.position.mark_price + stop_leway).round();
+        let risk_leway: f64 = self.position.liquidation_price - self.position.avg_entry_price;
+        let stop_leway: f64 = risk_leway * self.stop_fraction;
+        let stop_price: f64 = self.position.mark_price + stop_leway;
 
         let stops = self.get_open_stop_orders();
 
@@ -144,33 +206,18 @@ impl InferenceEngine {
             .filter(|ord| ord.is_sell())
             .collect();
 
-        // TODO dry (make more consice)
+        // TODO dry for long/short (make more consice)
         // If the position is long
         if self.position.is_short() {
-
-            // Remove any short stop orders
-            if (count(short_stops) > 0){
-                for order in short_stops.into_iter() {
-
-                }
-            }
-
-            // TODO dry
-            if (count(long_stops) == 1) {
-
-            } else if (count(short_stops) > 1){
-
-            } else {
-
-
-            }
-
-
-
+            new_orders, amend_orders = self.gen_stops_for_side()
         } else if self.position.is_long() {
-
+            new_orders, amend_orders = self.gen_stops_for_side()
         }
+
+        (new_orders, amend_orders)
     }
+
+
 
 
 
