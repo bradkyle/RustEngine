@@ -9,7 +9,9 @@ edition = "2018"
 [dependencies]
 bitmex = "0.2"
 ndarray = "0.13.0"
+rayon = "1.3.0"
+rkdb = "0.4.0"
 
 [[bin]]
 name = "main"
-path = "src/bin/run_discrete.rs"
+path = "src/bin/wss.rs"

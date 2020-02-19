@@ -4,7 +4,7 @@ use rayon::prelude::*;
 use std::time::SystemTime;
 use std::fmt::Debug;
 
-struct BaseEngine {
+struct InferenceEngine {
     // Static config
     exchange: u64,
     symbol: u64,
@@ -33,7 +33,7 @@ struct BaseEngine {
 
 }
 
-impl BaseEngine {
+impl InferenceEngine {
 
     fn new(&self) -> BaseEngine {
 
@@ -151,9 +151,7 @@ impl BaseEngine {
             // Remove any short stop orders
             if (count(short_stops) > 0){
                 for order in short_stops.into_iter() {
-                    match order {
-                        amend_orders.push()
-                    }
+
                 }
             }
 
@@ -162,10 +160,10 @@ impl BaseEngine {
 
             } else if (count(short_stops) > 1){
 
-            } else (
+            } else {
 
 
-            )
+            }
 
 
 
