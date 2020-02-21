@@ -5,9 +5,13 @@ name = "RustEngine"
 version = "0.1.0"
 dependencies = [
  "bitmex",
+ "hashbrown",
  "ndarray",
+ "priority-queue",
  "rayon",
  "rkdb",
+ "serde",
+ "serde_derive",
 ]
 
 [[package]]
@@ -516,6 +520,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "hashbrown"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "29fba9abe4742d586dfd0c06ae4f7e73a1c2d86b856933509b269d82cdf06e18"
+
+[[package]]
 name = "heck"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -535,9 +545,9 @@ dependencies = [
 
 [[package]]
 name = "hex"
-version = "0.4.1"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "76cdda6bf525062a0c9e8f14ee2b37935c86b8efb6c8b69b3c83dfb518a914af"
+checksum = "644f9158b2f133fd50f5fb3242878846d9eb792e445c893805ff0e3824006e35"
 
 [[package]]
 name = "http"
@@ -1033,6 +1043,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "74490b50b9fbe561ac330df47c08f3f33073d2d00c150f719147d7c54522fa1b"
 
 [[package]]
+name = "priority-queue"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5a03dfae8e64d4aa651415e2a4321f9f09f2e388a2f8bec36bed03bc22c0b687"
+dependencies = [
+ "indexmap",
+ "take_mut",
+]
+
+[[package]]
 name = "proc-macro-hack"
 version = "0.5.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1427,6 +1447,12 @@ dependencies = [
  "syn 1.0.14",
  "unicode-xid 0.2.0",
 ]
+
+[[package]]
+name = "take_mut"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f764005d11ee5f36500a149ace24e00e3da98b0158b3e2d53a7495660d3f4d60"
 
 [[package]]
 name = "tempfile"

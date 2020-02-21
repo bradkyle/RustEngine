@@ -1,5 +1,5 @@
 
-mod conf;
-mod inference;
-mod models;
-mod state;
+pub mod conf;
+pub mod inference;
+pub mod models;
+pub mod state;
