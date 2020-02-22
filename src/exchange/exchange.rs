@@ -1,13 +1,48 @@
 
-use super::models::{StopOrder, OrderRequest, OrderSide, OrderType, Order};
+use super::models::{
+    Datum,
+    StopOrder,
+    OrderRequest,
+    OrderSide,
+    OrderType,
+    Order,
+    Position,
+    Margin,
+    Trade,
 
+};
+
+//
+pub enum Exchange {
+    Bitmex
+}
+
+// This is a struct that forms part
+// of all sub-exchange structs and subsequently
+// all Exchange client classes "inherit" from this
+// struct via composition. This serves to ameliorate
+// the differences in exchange state representation
+// and subsequently standerdizes state functionality for
+// this module.
+pub struct ExchangeState {
+    stop_orders: &mut Box<Vec<StopOrder>>,
+    limit_orders: &mut Box<Vec<Order>>,
+    position: &mut Box<Position>,
+    margin: &mut Box<Margin>,
+    instrument: &mut Box<Instrument>,
+    funding: &mut Box<Funding>,
+    orderbook: &mut OrderBook<Orderbook>
+}
 
 pub trait ExchangeWorker {
 
+    // Puts
+    fn send_update(&self, update: Datum);
+
     // Functionality for updating the state
     // of the exchange client.
-    fn process_ws_update(&self);
-    fn run_state_engine(&self);
+    fn parse_ws_update(&self);
+    fn run_ws(&self);
 }
 
 

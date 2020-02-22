@@ -28,6 +28,36 @@ pub trait StopOrder {
     fn is_ask(&self) -> bool;
 }
 
+
+pub enum Datum {
+    OrderBook()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 pub trait Order {
+
+}
+
+pub trait Margin {
+
+}
+
+pub trait Position {
+
+}
+
+pub trait Trade {
 
 }

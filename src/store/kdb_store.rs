@@ -9,7 +9,7 @@ use rkdb::{
 
 // Attempts to connect to localhost port 12001, runs a query and prints result
 fn main() {
-    let handle = match api::Handle::connect("localhost", 5051, "user") {
+    let handle = match api::Handle::connect("localhost", 12001, "user") {
         Ok(h) => h,
         Err(e) => { println!("{}", e); std::process::exit(1) }
     };
@@ -21,4 +21,17 @@ fn main() {
     handle.close();
     let KOwned(k) = k;
     println!("{:?}", KVal::new(k));
+}
+
+
+pub struct KDBStore {
+
+}
+
+impl KDBStore {
+    fn new() -> Self {
+        KDBStore {
+
+        }
+    }
 }
