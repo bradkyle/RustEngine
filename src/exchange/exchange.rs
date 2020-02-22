@@ -1,17 +1,21 @@
 
-use super::models::{StopOrder, OrderRequest, OrderSide, OrderType};
+use super::models::{StopOrder, OrderRequest, OrderSide, OrderType, Order};
 
 
 pub trait ExchangeWorker {
 
     // Functionality for updating the state
     // of the exchange client.
-    fn run_state_engine(&self);
     fn process_ws_update(&self);
+    fn run_state_engine(&self);
 }
 
 
 // Assumes only one position is open
+// This trait provides functionality that
+// serves to allow for an agent and its respective
+// logic to interact with via means of requests with
+// the given exchange class which implements it.
 pub trait ExchangeClient {
 
     fn is_short(&self) -> bool;
@@ -31,8 +35,19 @@ pub trait ExchangeClient {
     fn liquidation_price(&self) -> f32;
     fn average_entry_price(&self) -> f32;
     fn mark_price(&self) -> f32;
+    fn funding_countdown(&self) -> i32;
+    fn funding_rate(&self) -> f32;
 
+    // REST GET operations
+    fn get_open_limit_orders(&self) -> Vec<Orders>;
     fn get_open_stop_orders(&self) -> Vec<dyn StopOrder>;
+    fn get_position(&self) -> Position;
+    fn get_account_margin(&self) -> Margin;
+    fn get_last_orderbook(&self) -> Depth;
+
+    // RESR POST operations
+    fn amend_bulk_orders(&self, orders: OrderRequest);
+    fn place_bulk_orders(&self, orders: OrderRequest);
 
     // Check if the given stop loss order adequately matches the given
     // stop price and is equal to the opposite of the current position.
@@ -104,10 +119,15 @@ pub trait ExchangeClient {
         )
     }
 
+    // TODO split and make testable
+    // Generates a set of new orders and amend orders that need
+    // to be placed such that the given position is adequately
+    // opposed by a stop which serves to curb risk therin.
+    // less useful for high frequency trading however it is still
+    // useful
     fn generate_stops_from_position<T: StopOrder, U:OrderRequest>(
         &self,
         stop_fraction: f32,
-
     ) -> (Vec<U>, Vec<U>) {
         let mut new_orders = Vec::new();
         let mut amend_orders = Vec::new();
@@ -156,6 +176,19 @@ pub trait ExchangeClient {
         (new_orders, amend_orders)
     }
 
+    // Generates and appends a set of requests
+    // that serve to anneal the given orders
+    // to the desired quantity at the given level
+    // in the order book (price not necessary for this)
+    fn generate_order_requests_from_delta(
+        &self,
+        lvl_delta: i32,
+        lvl_orders: Vec<Order>,
+    ) -> () {
+
+    }
+
+
     // Generates a set of orders to be placed
     // in the orderbook gven a set of buy side deltas
     // indicative of the changes in order quantities
@@ -163,12 +196,41 @@ pub trait ExchangeClient {
     // with ascending divergence from the spread
     // i.e. bid_deltas[990, 989, 987, ...]
     //      ask_deltas[991, 992, 993, ...]
-    fn generate_orders_from_deltas(
+    fn anneal_orders_binary<U:OrderRequest>(
         &self,
-        bid_deltas: Vec<f32>,
-        ask_deltas: Vec<f32>,
+        lvl_qty: i32,
+        bid_action: Vec<bool>,
+        ask_action: Vec<bool>,
+        bids: Vec<Order>,
+        asks: Vec<Order>,
+    ) -> <Vec<U> {
 
-    )
+        let next_asks: Vec<i32> = ask_action.iter().map(|a| (*a as i32)*lvl_qty).collect();
+        let next_bids: Vec<i64> = bid_action.iter().map(|b| (*b as i32)*lvl_qty).collect();
+
+        // TODO sum orders per level
+
+        let ask_deltas: Vec<i32>
+
+
+    }
+
+    // Generates a set of orders to be placed
+    // in the orderbook gven a set of buy side deltas
+    // indicative of the changes in order quantities
+    // that need to occur per level of the orderbook.
+    // with ascending divergence from the spread
+    // i.e. bid_deltas[990, 989, 987, ...]
+    //      ask_deltas[991, 992, 993, ...]
+    fn anneal_orders_dynamic<U:OrderRequest>(
+        &self,
+        bid_action: Vec<f32>,
+        ask_action: Vec<f32>,
+
+    ) -> (Vec<U>) {
+
+    }
+
 }
 
 

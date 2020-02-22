@@ -27,3 +27,7 @@ pub trait StopOrder {
     fn is_bid(&self) -> bool;
     fn is_ask(&self) -> bool;
 }
+
+pub trait Order {
+
+}
