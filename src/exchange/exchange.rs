@@ -1,3 +1,4 @@
+extern crate ndarray;
 
 use super::models::{
     Datum,
@@ -245,7 +246,7 @@ pub trait ExchangeClient {
 
         // TODO sum orders per level
 
-        let ask_deltas: Vec<i32>
+        let ask_deltas: Vec<i32> =
 
 
     }
